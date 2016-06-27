@@ -7,17 +7,12 @@ import numpy as np
 
 from utils import flicker
 
-# Do I need to have a better version of randomness (i.e. more controlled or more random)?
-
 options = ['Motion', 'Instrumental', 'Direction']
 
-instrumental = ['Cycle', 'Paint', 'Saw', 'Sweep', 'Row']
+instrumental = ['Cycle', 'Paint', 'Saw', 'Sweep', 'Row', 'Drive']
 global_motion = ['Crawl', 'Cycle', 'Walk', 'Row', 'Drive']
-left_motion = ['Crawl_90L', 'Cycle_45L', 'Drive_45L',
+left_motion = ['Crawl_45L', 'Cycle_45L', 'Drive_45L',
 				'Paint_45L', 'Row_45L', 'Saw_0', 'Walk_45L']
-
-## include pop(list.index(choice))
-## np.random.choice(2, 2, replace=False) to get the index of next option
 
 def play_movie(win, movie, timing, keymap):
 	mov = visual.MovieStim3(win, 'movies/'+movie, size=[1620,956.25],
@@ -102,14 +97,14 @@ def version(win, choice):
 		text_and_stim_keypress(win, "Ready?\n\n" +
 								'Press any key to begin!')	
 
-def play_through_movies(win, files, timing, keymap, choice, participant, delay):
+def play_through_movies(win, files, timing, keymap, choice, participant, delay, round):
 	
 	# For pseudo-random orders
 	routes = [[ 11, 8, 10,  5,  3,  6,  2, 15, 13, 17, 14, 12,  4,  0,  7,  9, 16, 1 ],
 			  [ 7,  4, 17,  6,  1,  9,  0,  2, 12, 16, 11,  8,  5, 15, 10,  13, 3, 14],
 			  [ 5,  3, 13,  9,  4, 12,  2,  0, 17,  8, 16,  1, 10, 15, 11, 14,  7, 6 ]]
 			   
-	for i in routes[0]: 
+	for i in routes[round]: 
 		file = files[i]
 		mov_start, resp, time_of_resp = play_movie(win, file, timing, keymap) 
 		
@@ -163,6 +158,7 @@ def play_through_movies(win, files, timing, keymap, choice, participant, delay):
 			f.write(json.dumps(trial))
 			f.write('\n')
 		
+		print i, trial['action'], trial['response'], trial['correct_resp']
 		core.wait(delay)	
 
 									
@@ -181,8 +177,8 @@ def get_settings():
     dlg.addText('Biological Motion Task', color="Blue")
     dlg.addField('Subject ID:', 'practice')
     dlg.addField('Movie Timing:', 10)
-    dlg.addField('Delay:', 1)
-    dlg.addField('Rounds:', 1)
+    dlg.addField('Delay:', 3)
+    dlg.addField('Rounds:', 3)
     dlg.addField('Version','Direction', choices=options)
     dlg.show()
     if dlg.OK:
@@ -201,7 +197,7 @@ def run():
 	win.mouseVisible = False
 	
 	# Instructions
-	text_and_stim_keypress(win, "You are going to be observing a number of \"people\" performing different actions.\n\n" +
+	text_and_stim_keypress(win, "You are going to be observing a number of peoples performing different actions.\n\n" +
 								'(Press any key to continue)')
 	version(win, choice)
 	
@@ -222,11 +218,12 @@ def run():
 				if f.endswith('.mov')]
 	
 	# Play movies and save data
+	rc = np.random.choice(3, 3, replace=False) #rc for round_choice
 	
 	if rounds > 0:
 		# First round
 		play_through_movies(win, files, timing, keymap, 
-							choice, participant, delay)
+							choice, participant, delay, rc[0])
 		
 		if rounds > 1:
 		
@@ -240,13 +237,13 @@ def run():
 			# Second round
 			version(win, next_rounds[next[0]])
 			play_through_movies(win, files, timing, keymap, 
-								next_rounds[next[0]], participant, delay)
+								next_rounds[next[0]], participant, delay, rc[1])
 			if rounds > 2:
 				
 				# Third round
 				version(win, next_rounds[next[1]])
 				play_through_movies(win, files, timing, keymap, 
-								next_rounds[next[1]], participant, delay)
+								next_rounds[next[1]], participant, delay, rc[2])
 	
 	# Exit		
 	text_and_stim_keypress(win, "You're finished!\n\n" +
