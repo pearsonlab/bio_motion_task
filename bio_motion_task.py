@@ -153,7 +153,10 @@ def play_through_movies(win, files, timing, keymap, choice, participant, delay, 
 					trial['correct_resp'] = False
 		else:
 			trial['correct_resp'] = False
-
+		
+		if not os.path.exists('behavioral/'):
+			os.makedirs('behavioral')
+	
 		with open('behavioral/bio_motion_task_'+ participant + '.json', 'a') as f:
 			f.write(json.dumps(trial))
 			f.write('\n')
