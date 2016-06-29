@@ -1,6 +1,7 @@
 import sys
 from psychopy import visual, core, event, gui
 import json
+import os
 from os import listdir
 from os.path import isfile, join
 import numpy as np
@@ -12,7 +13,7 @@ options = ['Motion', 'Instrumental', 'Direction']
 instrumental = ['Cycle', 'Paint', 'Saw', 'Sweep', 'Row', 'Drive']
 global_motion = ['Crawl', 'Cycle', 'Walk', 'Row', 'Drive']
 left_motion = ['Crawl_45L', 'Cycle_45L', 'Drive_45L',
-				'Paint_45L', 'Row_45L', 'Saw_0', 'Walk_45L']
+				'Paint_45L', 'Row_45L', 'Walk_45L']
 
 def play_movie(win, movie, timing, keymap):
 	mov = visual.MovieStim3(win, 'movies/'+movie, size=[1620,956.25],
@@ -45,6 +46,12 @@ def play_movie(win, movie, timing, keymap):
 				flicker(win, 4)
 				time_of_resp = core.getTime()
 				return (mov_start, 'right', time_of_resp)
+			elif 'up' == keys[0]:
+				win.flip()
+				win.flip()
+				flicker(win, 4)
+				time_of_resp = core.getTime()
+				return (mov_start, 'up', time_of_resp)
 			else:
 				win.flip()
 				win.flip()
@@ -92,8 +99,8 @@ def version(win, choice):
 								'Press any key to begin!')
 	else:
 		text_and_stim_keypress(win, "For THIS round...\n\nWHILE the movie is playing:\n\n      -Press the RIGHT arrow key if the person is moving to the right." +
-								"\n          OR if the person is not moving distinctly in either direction."+
-								"\n\n      -Press the LEFT arrow key if the person is moving to the left.")
+								"\n\n      -Press the LEFT arrow key if the person is moving to the left."+
+								"\n\n      -Press the UP arrow key if the person is not moving\n        in either direction.")
 		text_and_stim_keypress(win, "Ready?\n\n" +
 								'Press any key to begin!')	
 
@@ -147,10 +154,18 @@ def play_through_movies(win, files, timing, keymap, choice, participant, delay, 
 				else:
 					trial['correct_resp'] = False
 			else:
-				if resp == 'right':
-					trial['correct_resp'] = True
+				if choice == 'Direction':
+					if resp == 'right' and file[-5] == 'R':
+						trial['correct_resp'] = True
+					elif resp == 'up' and file[-5] != 'R':
+						trial['correct_resp'] = True
+					else:
+						trial['correct_resp'] = False
 				else:
-					trial['correct_resp'] = False
+					if resp == 'right':
+						trial['correct_resp'] = True
+					else:
+						trial['correct_resp'] = False
 		else:
 			trial['correct_resp'] = False
 		
