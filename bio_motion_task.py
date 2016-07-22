@@ -93,14 +93,14 @@ def version(win, choice):
 		text_and_stim_keypress(win, "Ready?\n\n" +
 								'Press any key to begin!')
 	elif choice == "Motion":
-		text_and_stim_keypress(win, "For THIS round...\n\nWHILE the movie is playing:\n\n      -Press the RIGHT arrow key if the person could do this action\n        in one spot." +
-								"\n\n      -Press the LEFT arrow key if the person would be moving around\n        while performing this action.")
+		text_and_stim_keypress(win, "For THIS round...\n\nWHILE the movie is playing:\n\n      -Press the RIGHT arrow key if the person could perform this \n        action in one spot." +
+								"\n\n      -Press the LEFT arrow key if the person would be moving in \n        a specific direction while performing this action.")
 		text_and_stim_keypress(win, "Ready?\n\n" +
 								'Press any key to begin!')
 	else:
 		text_and_stim_keypress(win, "For THIS round...\n\nWHILE the movie is playing:\n\n      -Press the RIGHT arrow key if the person is moving to the right." +
 								"\n\n      -Press the LEFT arrow key if the person is moving to the left."+
-								"\n\n      -Press the UP arrow key if the person is not moving\n        in either direction.")
+								"\n\n      -Press the UP arrow key if the person is not moving\n        distinctly in either direction.")
 		text_and_stim_keypress(win, "Ready?\n\n" +
 								'Press any key to begin!')	
 
