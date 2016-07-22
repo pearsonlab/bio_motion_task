@@ -17,7 +17,7 @@ left_motion = ['Crawl_45L', 'Cycle_45L', 'Drive_45L',
 
 def play_movie(win, movie, timing, keymap):
 	mov = visual.MovieStim3(win, 'movies/'+movie, size=[1620,956.25],
-                       flipVert=False, flipHoriz=False, loop=True)
+                       flipVert=False, flipHoriz=False, loop=True, noAudio=True)
 	
 	timer = core.CountdownTimer(timing)
 	mov_start = core.getTime()
