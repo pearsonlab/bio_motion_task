@@ -198,7 +198,7 @@ def get_settings():
     dlg.addText('Biological Motion Task', color="Blue")
     dlg.addField('Subject ID:', 'practice')
     dlg.addField('Movie Timing:', 10)
-    dlg.addField('Delay:', 3)
+    dlg.addField('Delay:', 2)
     dlg.addField('Rounds:', 3)
     dlg.addField('Version','Direction', choices=options)
     dlg.show()
