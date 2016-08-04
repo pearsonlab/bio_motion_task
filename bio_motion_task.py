@@ -3,6 +3,7 @@ from psychopy import visual, core, event, gui
 import json
 import os
 from os import listdir
+from datetime import datetime
 from os.path import isfile, join
 import numpy as np
 
@@ -46,12 +47,12 @@ def play_movie(win, movie, timing, keymap):
                 flicker(win, 4)
                 time_of_resp = core.getTime()
                 return (mov_start, 'right', time_of_resp)
-            elif 'up' == keys[0]:
+            elif 'down' == keys[0]:
                 win.flip()
                 win.flip()
                 flicker(win, 4)
                 time_of_resp = core.getTime()
-                return (mov_start, 'up', time_of_resp)
+                return (mov_start, 'down', time_of_resp)
             else:
                 win.flip()
                 win.flip()
@@ -100,7 +101,7 @@ def version(win, choice):
     else:
         text_and_stim_keypress(win, "For THIS round...\n\nWHILE the movie is playing:\n\n      -Press the RIGHT arrow key if the person is moving to the right." +
                                 "\n\n      -Press the LEFT arrow key if the person is moving to the left."+
-                                "\n\n      -Press the UP arrow key if the person is not moving\n        distinctly in either direction.")
+                                "\n\n      -Press the DOWN arrow key if the person is not moving\n        distinctly in either direction.")
         text_and_stim_keypress(win, "Ready?\n\n" +
                                 'Press any key to begin!')
 
@@ -157,7 +158,7 @@ def play_through_movies(win, files, timing, keymap, choice, participant, delay, 
                 if choice == 'Direction':
                     if resp == 'right' and file[-5] == 'R':
                         trial['correct_resp'] = True
-                    elif resp == 'up' and file[-5] != 'R':
+                    elif resp == 'down' and file[-5] != 'R':
                         trial['correct_resp'] = True
                     else:
                         trial['correct_resp'] = False
@@ -183,8 +184,8 @@ def play_through_movies(win, files, timing, keymap, choice, participant, delay, 
 def save_data(day_time, start_time, participant):
 
     info = {}
-    info['day_time'] = day_time
-    info['start_time'] = start_time
+    info['wall_time'] = day_time
+    info['psychopy_time'] = start_time
 
     if not os.path.exists('behavioral/'):
             os.makedirs('behavioral')
@@ -225,7 +226,8 @@ def run():
     # Starting timers and save initial information
     globalTimer = core.Clock()
     start_time = globalTimer.getTime()
-    day_time = core.getAbsTime()
+    t = datetime.now()
+    day_time = '%d:%d:%d:%d' % (t.hour, t.minute, t.second, t.microsecond)
     save_data(day_time, start_time, participant)
 
     # Wait
@@ -269,6 +271,13 @@ def run():
     # Exit
     text_and_stim_keypress(win, "You're finished!\n\n" +
                                 '(Press any key to exit)')
+    
+    # Save end data
+    t = datetime.now()
+    day_time = '%d:%d:%d:%d' % (t.hour, t.minute, t.second, t.microsecond)
+    end_time = globalTimer.getTime()
+    save_data(day_time, end_time, participant)
+    
     core.quit()
 
 if __name__ == '__main__':
