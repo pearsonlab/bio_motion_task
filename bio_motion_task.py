@@ -218,7 +218,7 @@ def run():
     win = visual.Window(winType='pyglet', monitor="testMonitor", units="pix", screen=1,
             fullscr=True, colorSpace='rgb255', color=(0, 0, 0))
     win.mouseVisible = False
-    trigger = Flicker(win, pos=(0.7, 0.44))
+    trigger = Flicker(win)
 
     # Instructions
     text_and_stim_keypress(win, "You are going to be observing a number of peoples performing different actions.\n\n" +
