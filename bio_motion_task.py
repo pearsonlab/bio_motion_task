@@ -7,7 +7,7 @@ from datetime import datetime
 from os.path import isfile, join
 import numpy as np
 
-from utils import flicker
+from utils import Flicker
 
 options = ['Motion', 'Instrumental', 'Direction']
 
@@ -16,13 +16,14 @@ global_motion = ['Crawl', 'Cycle', 'Walk', 'Row', 'Drive']
 left_motion = ['Crawl_45L', 'Cycle_45L', 'Drive_45L',
                 'Paint_45L', 'Row_45L', 'Walk_45L']
 
-def play_movie(win, movie, timing, keymap):
+def play_movie(win, movie, timing, keymap, trigger=None):
     mov = visual.MovieStim3(win, 'movies/'+movie, size=[1620,956.25],
                        flipVert=False, flipHoriz=False, loop=True, noAudio=True)
 
     timer = core.CountdownTimer(timing)
     mov_start = core.getTime()
-    flicker(win, 1)
+    if trigger:
+        trigger.flicker(1)
     event.clearEvents(eventType='keyboard')
 
     while mov.status != visual.FINISHED:
@@ -32,38 +33,38 @@ def play_movie(win, movie, timing, keymap):
 
         if keys:
             if 'escape' in keys:
-                flicker(win, 0)
+                trigger.flicker_block(0)
                 win.close()
                 core.quit()
             elif 'left' == keys[0]:
                 win.flip()
                 win.flip()
-                flicker(win, 4)
+                trigger.flicker_block(4)
                 time_of_resp = core.getTime()
                 return (mov_start, 'left', time_of_resp)
             elif 'right' == keys[0]:
                 win.flip()
                 win.flip()
-                flicker(win, 4)
+                trigger.flicker_block(4)
                 time_of_resp = core.getTime()
                 return (mov_start, 'right', time_of_resp)
             elif 'down' == keys[0]:
                 win.flip()
                 win.flip()
-                flicker(win, 4)
+                trigger.flicker_block(4)
                 time_of_resp = core.getTime()
                 return (mov_start, 'down', time_of_resp)
             else:
                 win.flip()
                 win.flip()
-                flicker(win, 16)
+                trigger.flicker_block(16)
                 time_of_resp = core.getTime()
                 return (mov_start, 'invalid_resp', time_of_resp)
         if not keys:
             if timer.getTime() <= 0:
                 win.flip()
                 win.flip()
-                flicker(win, 16)
+                trigger.flicker_block(16)
                 return (mov_start, 'timeout', 'timeout')
 
 def text_and_stim_keypress(win, text, stim=None):
@@ -105,7 +106,7 @@ def version(win, choice):
         text_and_stim_keypress(win, "Ready?\n\n" +
                                 'Press any key to begin!')
 
-def play_through_movies(win, files, timing, keymap, choice, participant, delay, round):
+def play_through_movies(win, files, timing, keymap, choice, participant, delay, round, trigger):
 
     # For pseudo-random orders
     routes = [[ 11, 8, 10,  5,  3,  6,  2, 15, 13, 17, 14, 12,  4,  0,  7,  9, 16, 1 ],
@@ -114,7 +115,7 @@ def play_through_movies(win, files, timing, keymap, choice, participant, delay, 
 
     for i in routes[round]:
         file = files[i]
-        mov_start, resp, time_of_resp = play_movie(win, file, timing, keymap)
+        mov_start, resp, time_of_resp = play_movie(win, file, timing, keymap, trigger)
 
         win.flip()
         win.flip()
@@ -217,6 +218,7 @@ def run():
     win = visual.Window(winType='pyglet', monitor="testMonitor", units="pix", screen=1,
             fullscr=True, colorSpace='rgb255', color=(0, 0, 0))
     win.mouseVisible = False
+    trigger = Flicker(win, pos=(0.7, 0.44))
 
     # Instructions
     text_and_stim_keypress(win, "You are going to be observing a number of peoples performing different actions.\n\n" +
@@ -246,7 +248,7 @@ def run():
     if rounds > 0:
         # First round
         play_through_movies(win, files, timing, keymap,
-                            choice, participant, delay, rc[0])
+                            choice, participant, delay, rc[0], trigger)
 
         if rounds > 1:
 
@@ -260,13 +262,13 @@ def run():
             # Second round
             version(win, next_rounds[next[0]])
             play_through_movies(win, files, timing, keymap,
-                                next_rounds[next[0]], participant, delay, rc[1])
+                                next_rounds[next[0]], participant, delay, rc[1], trigger)
             if rounds > 2:
 
                 # Third round
                 version(win, next_rounds[next[1]])
                 play_through_movies(win, files, timing, keymap,
-                                next_rounds[next[1]], participant, delay, rc[2])
+                                next_rounds[next[1]], participant, delay, rc[2], trigger)
 
     # Exit
     text_and_stim_keypress(win, "You're finished!\n\n" +
