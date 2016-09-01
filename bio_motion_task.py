@@ -16,7 +16,7 @@ global_motion = ['Crawl', 'Cycle', 'Walk', 'Row', 'Drive']
 left_motion = ['Crawl_45L', 'Cycle_45L', 'Drive_45L',
                 'Paint_45L', 'Row_45L', 'Walk_45L']
 
-def play_movie(win, movie, timing, keymap, trigger=None):
+def play_movie(win, movie, timing, keymap, participant, trigger=None):
     mov = visual.MovieStim3(win, 'movies/'+movie, size=[1620,956.25],
                        flipVert=False, flipHoriz=False, loop=True, noAudio=True)
 
@@ -74,7 +74,7 @@ def play_movie(win, movie, timing, keymap, trigger=None):
                 trigger.flicker_block(16)
                 return (mov_start, 'timeout', 'timeout')
 
-def text_and_stim_keypress(win, text, stim=None):
+def text_and_stim_keypress(win, text, participant, stim=None):
         if stim is not None:
             if type(stim) == list:
                 map(lambda x: x.draw(), stim)
@@ -101,23 +101,23 @@ def text_and_stim_keypress(win, text, stim=None):
         win.flip()
 
 
-def version(win, choice):
+def version(win, choice, participant):
     if choice == "Instrumental":
         text_and_stim_keypress(win, "For THIS round...\n\nWHILE the movie is playing:\n\n      -Press the RIGHT arrow key if the person is moving on their own." +
-                                "\n\n       -Press the LEFT arrow key if the person is using a tool or vehicle\n        in their motion.")
+                                "\n\n       -Press the LEFT arrow key if the person is using a tool or vehicle\n        in their motion.", participant)
         text_and_stim_keypress(win, "Ready?\n\n" +
-                                'Press any key to begin!')
+                                'Press any key to begin!', participant)
     elif choice == "Motion":
         text_and_stim_keypress(win, "For THIS round...\n\nWHILE the movie is playing:\n\n      -Press the RIGHT arrow key if the person could perform this \n        action in one spot." +
-                                "\n\n      -Press the LEFT arrow key if the person would be moving in \n        a specific direction while performing this action.")
+                                "\n\n      -Press the LEFT arrow key if the person would be moving in \n        a specific direction while performing this action.", participant)
         text_and_stim_keypress(win, "Ready?\n\n" +
-                                'Press any key to begin!')
+                                'Press any key to begin!', participant)
     else:
         text_and_stim_keypress(win, "For THIS round...\n\nWHILE the movie is playing:\n\n      -Press the RIGHT arrow key if the person is moving to the right." +
                                 "\n\n      -Press the LEFT arrow key if the person is moving to the left."+
-                                "\n\n      -Press the DOWN arrow key if the person is not moving\n        distinctly in either direction.")
+                                "\n\n      -Press the DOWN arrow key if the person is not moving\n        distinctly in either direction.", participant)
         text_and_stim_keypress(win, "Ready?\n\n" +
-                                'Press any key to begin!')
+                                'Press any key to begin!', participant)
 
 def play_through_movies(win, files, timing, keymap, choice, participant, delay, round, trigger):
 
@@ -128,7 +128,7 @@ def play_through_movies(win, files, timing, keymap, choice, participant, delay, 
 
     for i in routes[round]:
         file = files[i]
-        mov_start, resp, time_of_resp = play_movie(win, file, timing, keymap, trigger)
+        mov_start, resp, time_of_resp = play_movie(win, file, timing, keymap, participant, trigger)
 
         win.flip()
         win.flip()
@@ -235,10 +235,11 @@ def run():
 
     # Instructions
     text_and_stim_keypress(win, "You are going to be observing a number of peoples performing different actions.\n\n" +
-                                '(Press any key to continue)')
-    version(win, choice)
+                                '(Press any key to continue)', participant)
+    version(win, choice, participant)
 
     # Starting timers and save initial information
+    global globalTimer
     globalTimer = core.Clock()
     start_time = globalTimer.getTime()
     t = datetime.now()
@@ -273,19 +274,19 @@ def run():
             next = np.random.choice(2, 2, replace=False)
 
             # Second round
-            version(win, next_rounds[next[0]])
+            version(win, next_rounds[next[0]], participant)
             play_through_movies(win, files, timing, keymap,
                                 next_rounds[next[0]], participant, delay, rc[1], trigger)
             if rounds > 2:
 
                 # Third round
-                version(win, next_rounds[next[1]])
+                version(win, next_rounds[next[1]], participant)
                 play_through_movies(win, files, timing, keymap,
                                 next_rounds[next[1]], participant, delay, rc[2], trigger)
 
     # Exit
     text_and_stim_keypress(win, "You're finished!\n\n" +
-                                '(Press any key to exit)')
+                                '(Press any key to exit)', participant)
     
     # Save end data
     t = datetime.now()
