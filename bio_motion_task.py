@@ -34,6 +34,13 @@ def play_movie(win, movie, timing, keymap, trigger=None):
         if keys:
             if 'escape' in keys:
                 trigger.flicker_block(0)
+                
+                # Save end data
+                t = datetime.now()
+                day_time = '%d:%d:%d:%d' % (t.hour, t.minute, t.second, t.microsecond)
+                end_time = globalTimer.getTime()
+                save_data(day_time, end_time, participant)
+
                 win.close()
                 core.quit()
             elif 'left' == keys[0]:
@@ -83,6 +90,12 @@ def text_and_stim_keypress(win, text, stim=None):
         win.flip()
         key = event.waitKeys()
         if key[0] == 'escape':
+            # Save end data
+            t = datetime.now()
+            day_time = '%d:%d:%d:%d' % (t.hour, t.minute, t.second, t.microsecond)
+            end_time = globalTimer.getTime()
+            save_data(day_time, end_time, participant)
+
             core.quit()
             win.flip()
         win.flip()
