@@ -122,9 +122,12 @@ def version(win, choice, participant):
 def play_through_movies(win, files, timing, keymap, choice, participant, delay, round, trigger):
 
     # For pseudo-random orders
-    routes = [[ 11, 8, 10,  5,  3,  6,  2, 15, 13, 17, 14, 12,  4,  0,  7,  9, 16, 1 ],
-              [ 7,  4, 17,  6,  1,  9,  0,  2, 12, 16, 11,  8,  5, 15, 10,  13, 3, 14],
-              [ 5,  3, 13,  9,  4, 12,  2,  0, 17,  8, 16,  1, 10, 15, 11, 14,  7, 6 ]]
+    routes = [[13,  9, 10, 17, 35,  3, 31,  8, 32, 16,  5, 29, 34, 14,  0, 15, 27,
+                11, 19, 22,  4, 18,  1, 26, 25, 28,  6, 12,  2, 30,  7, 33, 21, 24, 23, 20],
+              [ 8, 24, 27,  9,  3, 22, 17, 12,  6, 26, 32, 15, 13,  1,  2, 19, 29,
+                33, 21, 31, 34,  0, 20,  5, 10, 14, 23, 35, 18,  4,  7, 16, 25, 30, 11, 28],
+              [15,  0, 30,  4,  3, 21, 32, 26,  6, 34, 14, 11, 19, 27, 31, 33, 16,
+                20, 22, 28, 24, 35, 18, 10,  9,  8,  2,  1, 23, 25,  7, 17,  5, 29, 13, 12]]
 
     for i in routes[round]:
         file = files[i]
@@ -214,7 +217,7 @@ def get_settings():
     dlg.addField('Subject ID:', 'practice')
     dlg.addField('Movie Timing:', 10)
     dlg.addField('Delay:', 2)
-    dlg.addField('Rounds:', 3)
+    dlg.addField('Rounds:', 2)
     dlg.addField('Version','Direction', choices=options)
     dlg.show()
     if dlg.OK:
