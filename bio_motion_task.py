@@ -217,7 +217,7 @@ def get_settings():
     dlg.addField('Subject ID:', 'practice')
     dlg.addField('Movie Timing:', 10)
     dlg.addField('Delay:', 2)
-    dlg.addField('Rounds:', 2)
+    dlg.addField('Rounds:', 1)
     dlg.addField('Version','Direction', choices=options)
     dlg.show()
     if dlg.OK:
