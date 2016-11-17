@@ -64,15 +64,16 @@ def play_movie(win, movie, timing, keymap, participant, trigger=None):
             else:
                 win.flip()
                 win.flip()
-                trigger.flicker_block(16)
+                trigger.flicker_block(32)
                 time_of_resp = core.getTime()
                 return (mov_start, 'invalid_resp', time_of_resp)
         if not keys:
             if timer.getTime() <= 0:
                 win.flip()
                 win.flip()
-                trigger.flicker_block(16)
-                return (mov_start, 'timeout', 'timeout')
+                time_of_resp = core.getTime()
+                trigger.flicker_block(32)
+                return (mov_start, 'timeout', time_of_resp)
 
 def text_and_stim_keypress(win, text, participant, stim=None):
         if stim is not None:
@@ -141,8 +142,7 @@ def play_through_movies(win, files, timing, keymap, choice, participant, delay, 
         trial['response'] = resp
         trial['time_of_resp'] = time_of_resp
 
-        if time_of_resp != 'timeout':
-            trial['resp_time'] = time_of_resp - mov_start
+        trial['resp_time'] = time_of_resp - mov_start
 
         trial['action'] = file.strip('.mov')
         trial['trial_type'] = choice
