@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    print args.file
+    print (args.file)
     name = import_file(args.file)
     writer = movie_writer(30)
     make_movie(writer, args.file, name, args.orientation, args.frames, 13)
