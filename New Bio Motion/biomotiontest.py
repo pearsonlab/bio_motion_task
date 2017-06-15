@@ -23,13 +23,24 @@ continueRoutine = True
 x = 0
 
 motion = ['Chop','Crawl','Drive','Peddle','Playpool','Row','Saw','Stir','Sweep','Playtennis','Walk',
-                'Cycle','Drink','Jump','Mow','Paint','Pump','Salute','Spade','Wave']
+        'Cycle','Drink','Jump','Mow','Paint','Pump','Salute','Spade','Wave','Chop_Control',
+        'Crawl_Control','Drive_Control','Peddle_Control','Playpool_Control','Row_Control','Saw_Control',
+        'Stir_Control','Sweep_Control','Playtennis_Control','Walk_Control','Cycle_Control','Drink_Control',
+        'Jump_Control','Mow_Control','Paint_Control','Pump_Control','Salute_Control','Spade_Control','Wave_Control']
 
-motion_color = [[0,100,0],[0,100,0],[0,100,0],[0,100,0],[0,100,0],[0,100,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],
+motion_color1 = [[0,100,0],[0,100,0],[0,100,0],[0,100,0],[0,100,0],[0,100,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],
                 [255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0]]
+random.shuffle(motion_color1)
+                
+motion_color2 = [[0,100,0],[0,100,0],[0,100,0],[0,100,0],[0,100,0],[0,100,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],
+                [255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0]]
+random.shuffle(motion_color2)
 
-random_num = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]#,20,
-            #21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
+motion_color = motion_color1 + motion_color2
+
+
+random_num = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+            21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]
 random.shuffle(random_num)
 
 if random_num[x] > 10:
@@ -38,6 +49,7 @@ if random_num[x] < 11:
     angle = 0
 
 file = motion[random_num[x]]
+
 
 name = pd.read_csv(file+'.txt',
                            delim_whitespace=True, skiprows=[0], encoding='utf-16',
