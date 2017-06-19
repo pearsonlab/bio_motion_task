@@ -200,7 +200,6 @@ for thisTrial in trials:
             dot_stim.setAutoDraw(True)
             offset = trigger.flicker(8)
         if dot_stim.status == STARTED and t >= (dots_max_duration + (fix_cross_duration-win.monitorFramePeriod*.75)): #most of one frame period left
-            offset = trigger.flicker(16)
             dot_stim.setAutoDraw(False)
             begin_ITI = True
         # *key_response* updates
