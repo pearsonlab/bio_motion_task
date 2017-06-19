@@ -216,7 +216,7 @@ for thisTrial in trials:
         if key_response.status == STARTED and t >= (dots_onset + (dots_max_duration -win.monitorFramePeriod*.75)): #most of one frame period left
             key_response.status = STOPPED
         if key_response.status == STARTED:
-            theseKeys = event.getKeys(keyList=['G', 'escape'])
+            theseKeys = event.getKeys(keyList=['down', 'escape'])
         
         # check for quit:
 	    if 'escape' in theseKeys:
@@ -272,7 +272,7 @@ for thisTrial in trials:
 
     if key_response.keys != None:  # we had a response
         trials.addData('key_response.rt', key_response.rt)
-    if key_response.keys == None:  # we had a response
+    if key_response.keys == None:  # we didn't have a response
         trials.addData('key_response.rt', ISI.tStart)
     thisExp.nextEntry()
 
