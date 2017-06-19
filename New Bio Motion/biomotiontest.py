@@ -79,12 +79,12 @@ Fixation_Cross = visual.TextStim(win=win, ori=0, name='Fixation_Cross',
     
 dot_stim = visual.ElementArrayStim(
     win=win,
-    units="pix",
+    #units="pix",
     nElements=markers,
     elementTex=None,
     elementMask="circle",
     xys=dot_xys[w],
-    sizes=10,
+    #sizes=10,
     colors=[0,100,0], 
     colorSpace='rgb',
     opacities=1.0

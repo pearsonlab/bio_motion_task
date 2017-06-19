@@ -143,32 +143,16 @@ for thisTrial in trials:
         angle = 1
     if random_num[x] < 11:
         angle = 0
+        
+    if random_num[x] > 19:
+        bio_control = 1
+    if random_num[x] < 20:
+        bio_control = 0
 
     file = motion[random_num[x]]
     dot_color=motion_color[random_num[x]]
-    print dot_color
-    #dot_color.astype(int)
-    MotionDots(win, moviename=file, angle=angle) 
-    
-    
-    
-    frames = []
-    markers = []
-    w=0
-    dot_xys=[]
-    
-    dot_stim = visual.ElementArrayStim(
-    win=win,
-    units="pix",
-    nElements=markers,
-    elementTex=None,
-    elementMask="circle",
-    xys=dot_xys,
-    sizes=10,
-    colorSpace='rgb',
-    colors=(0,100,0),
-    opacities=1.0)
-    
+
+    dot_stim = MotionDots(win, moviename=file, angle=angle, color = dot_color) 
 
     fix_cross_duration = .8 + 1.2 * np.random.rand()  # uniform random between 1 and 2
     dots_onset = (fix_cross_duration)
@@ -216,10 +200,11 @@ for thisTrial in trials:
             dot_stim.setAutoDraw(True)
             offset = trigger.flicker(8)
         if dot_stim.status == STARTED and t >= (dots_max_duration + (fix_cross_duration-win.monitorFramePeriod*.75)): #most of one frame period left
+            offset = trigger.flicker(16)
             dot_stim.setAutoDraw(False)
             begin_ITI = True
-
         # *key_response* updates
+
         if t >= dots_onset and key_response.status == NOT_STARTED:
             # keep track of start time/frame for later
             key_response.tStart = trial_start_time + t  # underestimates by a little under one frame
@@ -231,9 +216,9 @@ for thisTrial in trials:
         if key_response.status == STARTED and t >= (dots_onset + (dots_max_duration -win.monitorFramePeriod*.75)): #most of one frame period left
             key_response.status = STOPPED
         if key_response.status == STARTED:
-            theseKeys = event.getKeys(keyList=['left', 'right', 'escape'])
-
-	    # check for quit:
+            theseKeys = event.getKeys(keyList=['G', 'escape'])
+        
+        # check for quit:
 	    if 'escape' in theseKeys:
 	        endExpNow = True
 	    if len(theseKeys) > 0:  # at least one key was pressed
@@ -274,24 +259,22 @@ for thisTrial in trials:
             thisComponent.setAutoDraw(False)
 
     # store data for trials (TrialHandler)
-    #trials.addData('dots_speed', dots.speed)
-    #trials.addData('dots.coherence', dots.coherence)
-    #trials.addData('dots.direction', dots.dir)
-    #trials.addData('key_response.keys', key_response.keys)
-    #trials.addData('key_response.corr', key_response.corr)
-    #trials.addData('globalClock', globalClock.getTime())
-    #trials.addData('fix_cross_starttime', Fixation_Cross.tStart)
-    #trials.addData('cue_starttime', this_cue.tStart)
-    #trials.addData('dots_starttime', dots.tStart)
-    #trials.addData('response_starttime', key_response.tStart)
-    #trials.addData('feedback_cue_starttime', this_feedback_cue.tStart)
-
+    trials.addData('file', file)
+    trials.addData('color', dot_color)
+    trials.addData('angle', angle)
+    trials.addData('bio_control', bio_control)
+    trials.addData('key_response.keys', key_response.keys)
+    trials.addData('key_response.corr', key_response.corr)
+    trials.addData('globalClock', globalClock.getTime())
+    trials.addData('fix_cross_starttime', Fixation_Cross.tStart)
+    trials.addData('dot_stim_starttime', dot_stim.tStart)
+    trials.addData('response_starttime', key_response.tStart)
 
     if key_response.keys != None:  # we had a response
         trials.addData('key_response.rt', key_response.rt)
+    if key_response.keys == None:  # we had a response
+        trials.addData('key_response.rt', ISI.tStart)
     thisExp.nextEntry()
-
-# completed 5 repeats of 'trials'
 
 # these shouldn't be strictly necessary (should auto-save)
 thisExp.saveAsWideText(filename+'.csv')

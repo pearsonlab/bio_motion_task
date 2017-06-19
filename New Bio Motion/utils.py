@@ -80,24 +80,13 @@ class MotionDots(ElementArrayStim):
     Creates a biological motion dot pattern corresponding to a movie frame.
     The draw method repeats frames indefinitely.
     """
-    def __init__(self, win, moviename, angle, **kwargs):
+    def __init__(self, win, moviename, angle, color, **kwargs):
         self.win = win
         self.moviename = moviename
         self.current_frame = 0
         self.angle = angle
-        #self.colorSpace='rgb',
-        
-        # useful defaults for us (that are not defaults of ElementArrayStim)
-        if 'elementMask' not in kwargs:
-            kwargs['elementMask'] = 'circle'
-            
-        if 'sizes' not in kwargs:
-            kwargs['sizes'] = 10
-            
-        if 'colorSpace' not in kwargs:
-            kwargs['colorSpace'] = 'rgb'
-            
-        
+        self.color = color
+
         # load data from disk
         name = pd.read_csv(self.moviename+'.txt',
                               delim_whitespace=True, skiprows=[0], encoding='utf-16',
@@ -117,15 +106,19 @@ class MotionDots(ElementArrayStim):
             dot_xys_temp = []
             for j in range(self.markers):
                 point = name.loc[j+self.markers*i].tolist()
-                dot_xys_temp.append([point[angle],point[2]])
+                dot_xys_temp.append([point[self.angle],point[2]])
             self.dot_xys.append(dot_xys_temp)        
-        #if 'xys' not in kwargs:
+        
+        #sets important things to make dots and not get weird color flashes across the screen
+        self.size = 10
+        kwargs['elementMask'] = 'circle'
+        kwargs['elementTex'] = None
+        kwargs['units'] = 'pix'
+        kwargs['sizes'] = self.size
+        kwargs['colorSpace'] = 'rgb'
         kwargs['nElements'] = self.markers
         kwargs['xys'] = self.dot_xys[0]
-        #kwargs['colorSpace'] = 'rgb'
-        #kwargs['colors'] = dot_color
-        
-        #self.setColors(dot_color)
+        kwargs['colors'] = self.color
         
         super(MotionDots, self).__init__(win, **kwargs)
 
