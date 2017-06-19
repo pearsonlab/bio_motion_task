@@ -101,11 +101,14 @@ while continueRoutine > 0:
     t = trialClock.getTime()
     if t >= .5 and dot_stim.status == NOT_STARTED and t <= 2.5:
         for play in range(frames):
+            if play == frames:
+                play = 0
             dot_stim.xys = dot_xys[play]
             dot_stim.colors = motion_color[random_num[x]]
-            dot_stim.draw()
+            dot_stim.setAutoDraw(True)
             win.flip()
     if t > 2.5:
+        dot_stim.setAutoDraw(False)
         Fixation_Cross.setAutoDraw(True)
         win.flip()
     if t > 3.5:
