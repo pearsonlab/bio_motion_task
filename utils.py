@@ -1,5 +1,8 @@
 from psychopy import core, visual
 from psychopy.visual.circle import Circle
+from psychopy.visual.elementarray import ElementArrayStim
+import pandas as pd
+import numpy as np
 
 class Flicker(Circle):
     """
@@ -71,3 +74,61 @@ class Flicker(Circle):
                 self.counter += 1
 
         super(Flicker, self).draw()
+      
+class MotionDots(ElementArrayStim):
+    """
+    Creates a biological motion dot pattern corresponding to a movie frame.
+    The draw method repeats frames indefinitely.
+    """
+    def __init__(self, win, moviename, angle, color, **kwargs):
+        self.win = win
+        self.moviename = moviename
+        self.current_frame = 0
+        self.angle = angle
+        self.color = color
+
+        # load data from disk
+        name = pd.read_csv(self.moviename+'.txt',
+                              delim_whitespace=True, skiprows=[0], encoding='utf-16',
+                              header=None)
+
+        header = pd.read_csv(self.moviename+'.txt',
+                             delim_whitespace=True, nrows = 1, encoding='utf-16',
+                             header=None)
+
+        # get movie attributes
+        self.frames = header.iloc[0][2]
+        self.markers = header.iloc[0][5]
+        self.dot_xys=[]  # positions
+
+        # load in data
+        for i in range(self.frames):
+            dot_xys_temp = []
+            for j in range(self.markers):
+                point = name.loc[j+self.markers*i].tolist()
+                dot_xys_temp.append([point[self.angle],point[2]])
+            self.dot_xys.append(dot_xys_temp)        
+        
+        #sets important things to make dots and not get weird color flashes across the screen
+        self.size = 10
+        kwargs['elementMask'] = 'circle'
+        kwargs['elementTex'] = None
+        kwargs['units'] = 'pix'
+        kwargs['sizes'] = self.size
+        kwargs['colorSpace'] = 'rgb'
+        kwargs['nElements'] = self.markers
+        kwargs['xys'] = self.dot_xys[0]
+        kwargs['colors'] = self.color
+        
+        super(MotionDots, self).__init__(win, **kwargs)
+
+    def draw(self):
+        """
+        Draw the stim, then increment frame number.
+        """
+        
+        self.current_frame = (self.current_frame + 1) % self.frames
+        
+        self.xys = self.dot_xys[self.current_frame]
+
+        super(MotionDots, self).draw()            
