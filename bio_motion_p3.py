@@ -127,7 +127,14 @@ for thisTrial in trials:
 
     #------Prepare to start Routine "trial"-------
     t = 0
-    x += 1
+    if (x == 39):
+        random.shuffle(random_num)
+        random.shuffle(motion_color1)
+        random.shuffle(motion_color2)
+        motion_color = motion_color1 + motion_color2
+        x = 0
+    else:    
+        x += 1
     trialClock.reset()  # clock
     frameN = -1
     routineTimer.add(20.000000)
