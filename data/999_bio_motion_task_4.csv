@@ -1,8 +1,0 @@
-trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,file,color,angle,bio_control,key_response.keys,key_response.corr,globalClock,fix_cross_starttime,dot_stim_starttime,response_starttime,key_response.rt,frameRate,expName,session,participant,Number of Trials,
-0,0,0,0,Sweep,"(255, 0, 0)",0,0,[],0,6.2332880497,0.184705972672,2.8342089653,2.8342089653,[],59.9901024935,bio_motion_task,001,999,240,
-1,0,1,0,Cycle,"(255, 0, 0)",1,0,[],0,11.9832890034,6.48360013962,8.61743116379,8.61743116379,[],59.9901024935,bio_motion_task,001,999,240,
-2,0,2,0,Salute_Control,"(255, 0, 0)",1,1,[],0,19.0021519661,12.3035402298,15.6696631908,15.6696631908,[],59.9901024935,bio_motion_task,001,999,240,
-3,0,3,0,Playpool_Control,"(255, 0, 0)",1,1,[],0,26.366132021,19.4142582417,23.0662021637,23.0662021637,[],59.9901024935,bio_motion_task,001,999,240,
-4,0,4,0,Chop_Control,"(255, 0, 0)",1,1,[],0,33.1861391068,26.5238230228,29.77343297,29.77343297,[],59.9901024935,bio_motion_task,001,999,240,
-5,0,5,0,Walk_Control,"(255, 0, 0)",1,1,[],0,40.4371249676,33.3177058697,37.0121269226,37.0121269226,[],59.9901024935,bio_motion_task,001,999,240,
-6,0,6,0,Saw_Control,"(255, 0, 0)",1,1,[],0,47.6210131645,40.5451741219,44.1845972538,44.1845972538,[],59.9901024935,bio_motion_task,001,999,240,
