@@ -6,7 +6,7 @@ Investigating the extent to which the reorienting or contextual updating of atte
 This psychopy code implements a standard oddball task.
 
 ## Task Instructions:
-- Participants should press the <down> key when they see green dots
+- Participants should press the "down" key when they see green dots
 
 ### Brief Task Design:
 - The task needs to be run in a minimum of 40 trial blocks for correct oddball proportions. Currently set at 240 trials (~15min).
