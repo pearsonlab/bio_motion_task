@@ -16,7 +16,9 @@ from numpy.random import randint, normal, shuffle
 import os  # handy system and path functions
 import sys # to get file system encoding
 from utils import Flicker
+from utils import MotionDots
 import random
+import pandas as pd
 
 # Ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__)).decode(sys.getfilesystemencoding())
@@ -24,7 +26,7 @@ os.chdir(_thisDir)
 
 # Store info about the experiment session
 expName = u'bio_motion_task'  # from the Builder filename that created this script
-expInfo = {'participant':'', 'session':'001', 'Number of Trials':'100'}
+expInfo = {'participant':'', 'session':'001', 'Number of Trials':'240'}
 dlg = gui.DlgFromDict(dictionary=expInfo, title=expName, order=['participant', 'Number of Trials', 'session'])
 if dlg.OK == False: core.quit()  # user pressed cancel
 expInfo['expName'] = expName
@@ -42,7 +44,7 @@ logFile = logging.LogFile(filename+'.log', level=logging.EXP)
 logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a file
 
 endExpNow = False  # flag for 'escape' or other condition => quit the exp
-x=0
+x=-1
 # Start Code - component code to be run before the window creation
 
 # Setup the Window
@@ -64,29 +66,9 @@ else:
 
 trigger = Flicker(win, pos=(.75, .45))
 
-#load in the textfile for the dots coordinates
-textfile = np.loadtext(#specify the conditions of how you load in the txt file)
-
 # Initialize components for Routine "trial"
 trialClock = core.Clock()
 ISI = core.StaticPeriod(win=win, screenHz=expInfo['frameRate'], name='ISI')
-Fixation_Cross = visual.TextStim(win=win, ori=0, name='Fixation_Cross',
-    text=u'+',    font=u'Arial',
-    pos=[0, 0], height=0.1, wrapWidth=None,
-    color=u'white', colorSpace='rgb', opacity=1,
-    depth=-1.0)
-dot_stim = visual.ElementArrayStim(
-    win=win,
-    units="pix",
-    nElements=markers,
-    elementTex=None,
-    elementMask="circle",
-    xys=dot_xys[w],
-    sizes=10,
-    colors=[0,100,0],
-    colorSpace='rgb',
-    opacities=1.0)
-
 
 motion = ['Chop','Crawl','Drive','Peddle','Playpool','Row','Saw','Stir','Sweep','Playtennis','Walk',
         'Cycle','Drink','Jump','Mow','Paint','Pump','Salute','Spade','Wave','Chop_Control',
@@ -94,12 +76,12 @@ motion = ['Chop','Crawl','Drive','Peddle','Playpool','Row','Saw','Stir','Sweep',
         'Stir_Control','Sweep_Control','Playtennis_Control','Walk_Control','Cycle_Control','Drink_Control',
         'Jump_Control','Mow_Control','Paint_Control','Pump_Control','Salute_Control','Spade_Control','Wave_Control']
 
-motion_color1 = [[0,100,0],[0,100,0],[0,100,0],[0,100,0],[0,100,0],[0,100,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],
-                [255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0]]
+motion_color1 = [(0,100,0),(0,100,0),(0,100,0),(0,100,0),(0,100,0),(0,100,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0),
+                (255,0,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0)]
 random.shuffle(motion_color1)
 
-motion_color2 = [[0,100,0],[0,100,0],[0,100,0],[0,100,0],[0,100,0],[0,100,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],
-                [255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0],[255,0,0]]
+motion_color2 = [(0,100,0),(0,100,0),(0,100,0),(0,100,0),(0,100,0),(0,100,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0),
+                (255,0,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0),(255,0,0)]
 random.shuffle(motion_color2)
 
 motion_color = motion_color1 + motion_color2
@@ -107,6 +89,14 @@ motion_color = motion_color1 + motion_color2
 random_num = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
             21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]
 random.shuffle(random_num)
+
+dot_xys = []
+
+Fixation_Cross = visual.TextStim(win=win, ori=0, name='Fixation_Cross',
+    text=u'+', font=u'Arial',
+    pos=[0, 0], height=0.1, wrapWidth=None,
+    color=u'white', colorSpace='rgb', opacity=1,
+    depth=-1.0)
 
 #     "How to make sure that you can check whether response is correct based on dots motion"
 #     "How to save in additional data about coherence level"
@@ -137,6 +127,7 @@ for thisTrial in trials:
 
     #------Prepare to start Routine "trial"-------
     t = 0
+    x += 1
     trialClock.reset()  # clock
     frameN = -1
     routineTimer.add(20.000000)
@@ -152,33 +143,20 @@ for thisTrial in trials:
         angle = 1
     if random_num[x] < 11:
         angle = 0
+        
+    if random_num[x] > 19:
+        bio_control = 1
+    if random_num[x] < 20:
+        bio_control = 0
 
     file = motion[random_num[x]]
+    dot_color=motion_color[random_num[x]]
 
+    dot_stim = MotionDots(win, moviename=file, angle=angle, color = dot_color) 
 
-    name = pd.read_csv(file+'.txt',
-                               delim_whitespace=True, skiprows=[0], encoding='utf-16',
-                              header=None)
-
-    header = pd.read_csv(file+'.txt',
-                               delim_whitespace=True, nrows = 1, encoding='utf-16',
-                              header=None)
-
-    frames = header.iloc[0][2]
-    markers = header.iloc[0][5]
-    w=0
-    dot_xys=[]
-
-    for i in range(frames):
-        dot_xys_temp = []
-        for j in range(markers):
-            point = name.loc[j+markers*i].tolist()
-            dot_xys_temp.append([point[angle],point[2]])
-        dot_xys.append(dot_xys_temp)
-
-    fix_cross_duration = .8 + 1.2 * np.random.rand()  # uniform random between 1 and 2
-    dots_onset = (fix_cross_duration + .5)
-    dots_max_duration = 1.5
+    fix_cross_duration = 1.8 + 2.2 * np.random.rand()  # uniform random between 1 and 2
+    dots_onset = (fix_cross_duration)
+    dots_max_duration = 3.
 
     key_response = event.BuilderKeyResponse()  # create an object of type KeyResponse
     key_response.status = NOT_STARTED
@@ -219,18 +197,13 @@ for thisTrial in trials:
             # keep track of start time/frame for later
             dot_stim.tStart = trial_start_time + t  # underestimates by a little under one frame
             dot_stim.frameNStart = frameN  # exact frame index
-            for play in range(frames):
-            if play == frames:
-                play = 0
-            dot_stim.xys = dot_xys[play]
-            dot_stim.colors = motion_color[random_num[x]]
             dot_stim.setAutoDraw(True)
-            win.flip()
             offset = trigger.flicker(8)
         if dot_stim.status == STARTED and t >= (dots_max_duration + (fix_cross_duration-win.monitorFramePeriod*.75)): #most of one frame period left
             dot_stim.setAutoDraw(False)
-
+            begin_ITI = True
         # *key_response* updates
+
         if t >= dots_onset and key_response.status == NOT_STARTED:
             # keep track of start time/frame for later
             key_response.tStart = trial_start_time + t  # underestimates by a little under one frame
@@ -242,9 +215,9 @@ for thisTrial in trials:
         if key_response.status == STARTED and t >= (dots_onset + (dots_max_duration -win.monitorFramePeriod*.75)): #most of one frame period left
             key_response.status = STOPPED
         if key_response.status == STARTED:
-            theseKeys = event.getKeys(keyList=['left', 'right', 'escape'])
-
-	    # check for quit:
+            theseKeys = event.getKeys(keyList=['down', 'escape'])
+        
+        # check for quit:
 	    if 'escape' in theseKeys:
 	        endExpNow = True
 	    if len(theseKeys) > 0:  # at least one key was pressed
@@ -255,17 +228,12 @@ for thisTrial in trials:
 
 	# Inter-trial interval
         if begin_ITI:
-        x += 1
-	    win.flip()
-	    ISI.tStart = trial_start_time + t
-	    ISI.frameNStart = frameN  # exact frame index
-	    ISI.start(1)
-	    ISI.complete()
-	    continueRoutine = False  # trial is now over
-
-
-
-
+            win.flip()
+            ISI.tStart = trial_start_time + t  
+            ISI.frameNStart = frameN  # exact frame index
+            ISI.start(.5)
+            ISI.complete()
+            continueRoutine = False  # trial is now over
 
         # check if all components have finished
         if not continueRoutine:  # a component has requested a forced-end of Routine
@@ -290,24 +258,22 @@ for thisTrial in trials:
             thisComponent.setAutoDraw(False)
 
     # store data for trials (TrialHandler)
-    #trials.addData('dots_speed', dots.speed)
-    #trials.addData('dots.coherence', dots.coherence)
-    #trials.addData('dots.direction', dots.dir)
-    #trials.addData('key_response.keys', key_response.keys)
-    #trials.addData('key_response.corr', key_response.corr)
-    #trials.addData('globalClock', globalClock.getTime())
-    #trials.addData('fix_cross_starttime', Fixation_Cross.tStart)
-    #trials.addData('cue_starttime', this_cue.tStart)
-    #trials.addData('dots_starttime', dots.tStart)
-    #trials.addData('response_starttime', key_response.tStart)
-    #trials.addData('feedback_cue_starttime', this_feedback_cue.tStart)
-
+    trials.addData('file', file)
+    trials.addData('color', dot_color)
+    trials.addData('angle', angle)
+    trials.addData('bio_control', bio_control)
+    trials.addData('key_response.keys', key_response.keys)
+    trials.addData('key_response.corr', key_response.corr)
+    trials.addData('globalClock', globalClock.getTime())
+    trials.addData('fix_cross_starttime', Fixation_Cross.tStart)
+    trials.addData('dot_stim_starttime', dot_stim.tStart)
+    trials.addData('response_starttime', key_response.tStart)
 
     if key_response.keys != None:  # we had a response
         trials.addData('key_response.rt', key_response.rt)
+    if key_response.keys == None:  # we didn't have a response
+        trials.addData('key_response.rt', ISI.tStart)
     thisExp.nextEntry()
-
-# completed 5 repeats of 'trials'
 
 # these shouldn't be strictly necessary (should auto-save)
 thisExp.saveAsWideText(filename+'.csv')
