@@ -161,9 +161,9 @@ for thisTrial in trials:
 
     dot_stim = MotionDots(win, moviename=file, angle=angle, color = dot_color) 
 
-    fix_cross_duration = 1.8 + 2.2 * np.random.rand()  # uniform random between 1 and 2
+    fix_cross_duration = 0.8 + 1.2 * np.random.rand()  # uniform random between 1 and 2
     dots_onset = (fix_cross_duration)
-    dots_max_duration = 3.
+    dots_max_duration = 2.
 
     key_response = event.BuilderKeyResponse()  # create an object of type KeyResponse
     key_response.status = NOT_STARTED
